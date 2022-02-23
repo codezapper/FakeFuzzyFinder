@@ -27,7 +27,3 @@
 #include <regex>
 #include <climits>
 #include <chrono>
-
-#include "input.h"
-#include "term.h"
-#include "matcher.h"

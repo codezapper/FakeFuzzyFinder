@@ -2,6 +2,18 @@
 
 extern int match_done;
 
+bool is_printable(char c) {
+	if ((c >= 0x20) && (c <= 0x7E)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool is_extended(char c) {
+	return (c == 0x1B);
+}
+
 TermHandler::TermHandler() {
 }
 
@@ -40,8 +52,8 @@ std::string TermHandler::handle_input(std::string user_input, int list_size, int
 		c = getchar();
 
 		switch (c) {
-			case 0x41: selected_index = go_up(selected_index, list_size); break;
-			case 0x42: selected_index = go_down(selected_index, list_size); break;
+			case 0x41: selected_index = this->go_up(selected_index, list_size); break;
+			case 0x42: selected_index = this->go_down(selected_index, list_size); break;
 		}
 	} else {
 		if (is_printable(c)) {
@@ -68,19 +80,7 @@ void TermHandler::clear_output(int lines) {
 	}
 }
 
-bool is_printable(char c) {
-	if ((c >= 0x20) && (c <= 0x7E)) {
-		return true;
-	}
-
-	return false;
-}
-
-bool is_extended(char c) {
-	return (c == 0x1B);
-}
-
-int go_down(int index, int lines) {
+int TermHandler::go_down(int index, int lines) {
 	if (index < (lines - 1)) {
 		index++;
 	}
@@ -88,7 +88,7 @@ int go_down(int index, int lines) {
 	return index;
 }
 
-int go_up(int index, int lines) {
+int TermHandler::go_up(int index, int lines) {
 	if (index > 0) {
 		index--;
 	}
@@ -96,7 +96,7 @@ int go_up(int index, int lines) {
 	return index;
 }
 
-void show_matches(std::vector<std::string>matches_list, int selected_index, int lines) {
+void TermHandler::show_matches(std::vector<std::string>matches_list, int selected_index, int lines) {
 	int index = 0;
 	for (auto it = std::begin(matches_list); it != std::end(matches_list); ++it) {
 		if (index == selected_index) {
@@ -111,4 +111,3 @@ void show_matches(std::vector<std::string>matches_list, int selected_index, int 
 		std::cout << std::endl;
 	}
 }
-

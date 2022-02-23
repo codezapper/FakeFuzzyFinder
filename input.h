@@ -1,3 +1,5 @@
+#pragma once
+
 #include "generic.h"
 
 std::string get_command();

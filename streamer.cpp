@@ -1,5 +1,3 @@
-#include "term.h"
-#include "matcher.h"
 #include "streamer.h"
 
 extern std::mutex update_mtx;
@@ -59,7 +57,7 @@ void match_it(std::string &selected_value, TermHandler *term) {
 				if (!first_show) {
 					term->clear_output();
 				}
-				show_matches(matches_list, selected_index);
+				term->show_matches(matches_list, selected_index);
 				first_show = false;
 				std::cout << user_input;
 			}

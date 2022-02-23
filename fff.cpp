@@ -1,4 +1,3 @@
-#include "matcher.h"
 #include "streamer.h"
 
 std::mutex update_mtx;
@@ -38,7 +37,7 @@ int main(int argc, char **argv) {
 
 	while (!match_done) {
 		matches_list = get_matches(user_input, items_list);
-		show_matches(matches_list, selected_index);
+		term.show_matches(matches_list, selected_index);
 		std::cout << user_input.c_str();
 		fflush(stdout);
 
