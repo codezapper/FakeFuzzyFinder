@@ -2,7 +2,6 @@
 
 extern std::mutex update_mtx;
 extern std::string shared_item;
-extern struct termios original_term;
 extern int match_done;
 
 void match_it(std::string &selected_value, TermHandler *term) {

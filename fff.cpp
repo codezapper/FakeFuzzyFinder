@@ -3,7 +3,6 @@
 std::mutex update_mtx;
 std::string shared_item;
 
-extern struct termios original_term;
 int match_done = 0;
 
 
