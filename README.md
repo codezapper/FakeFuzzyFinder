@@ -45,7 +45,7 @@ Both ZSH and Bash
 
 The executable has two ways of getting the input: by loading all data and performing the search, or by streaming the data and performing the search while still reading it (results will be updated in real time while data is loading).
 
-NOTE: The result wuill be exactly what is shown, so the extract specific information from the output line (e.g. only the PID from the process list), some processing will be necessary.
+NOTE: The result will be exactly what is shown, so the extract specific information from the output line (e.g. only the PID from the process list), some processing will be necessary.
 
 - Loading all data
 	This is the default method and works for most situations. If the data is relatively big everything will still work, but the start up time could be high (due to waiting for the data to be loaded)
