@@ -16,13 +16,13 @@ void match_it(std::string &selected_value, TermHandler *term) {
 	bool first_show = true;
 	int selected_index = 0;
 	int prev_index = 0;
-	char c;
 
-	freopen("/dev/tty", "r", stdin);
 	term->init();
 
 	bool must_compute = true;
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+	Matcher matcher = Matcher();
 
 	while (!match_done) {
 		while (!term->kbhit()) {
@@ -45,7 +45,7 @@ void match_it(std::string &selected_value, TermHandler *term) {
 			auto interval = std::chrono::duration_cast<std::chrono::milliseconds>(end-begin).count();
 
 			if ((must_compute) && (interval > 1)) {
-				matches_list = get_matches(user_input, items_list);
+				matches_list = matcher.get_matches(user_input, items_list);
 				must_compute = false;
 				begin = std::chrono::steady_clock::now();
 			}

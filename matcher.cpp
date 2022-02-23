@@ -1,9 +1,8 @@
 #include "matcher.h"
 #include <ctime>
 
-std::map<std::string, int> score_map;
 
-int compute_score(std::string item, std::string user_input) {
+int Matcher::compute_score(std::string item, std::string user_input) {
 	int current_score = 1000;
 	int current_multiplier = 1;
 	int total_score = 0;
@@ -50,7 +49,7 @@ int compute_score(std::string item, std::string user_input) {
 	return current_score;
 }
 
-std::vector<std::string>get_matches(std::string user_input, std::vector<std::string> items_list, int lines) {
+std::vector<std::string> Matcher::get_matches(std::string user_input, std::vector<std::string> items_list, int lines) {
 	std::map<std::string, int>match_map;
 	int min_score = -999;
 	std::string min_string = "";
@@ -64,11 +63,12 @@ std::vector<std::string>get_matches(std::string user_input, std::vector<std::str
 
 	for (auto it = std::begin(items_list); it != std::end(items_list); ++it) {
 		int score = -2;
-		if (score_map[user_input + (*it)] == 0) {
-			score_map[user_input + (*it)] = compute_score((*it), user_input);
+		std::string map_key = user_input + (*it);
+		if (score_map[map_key] == 0) {
+			score_map[map_key] = compute_score((*it), user_input);
 		}
 
-		score = score_map[user_input + (*it)];
+		score = score_map[map_key];
 		if ((match_map.size() < lines) && (score > -1)) {
 			match_map[*it] = score;
 			if (min_score < score) {
@@ -114,6 +114,3 @@ std::vector<std::string>get_matches(std::string user_input, std::vector<std::str
 
 	return matches;
 }
-
-
-

@@ -28,15 +28,15 @@ int main(int argc, char **argv) {
 		items_list.push_back(file_name);
 	}
 
-	freopen("/dev/tty", "r", stdin);
-
 	term.init();
 	std::vector<std::string> matches_list;
 
 	int selected_index = 0;
 
+	Matcher matcher = Matcher();
+
 	while (!match_done) {
-		matches_list = get_matches(user_input, items_list);
+		matches_list = matcher.get_matches(user_input, items_list);
 		term.show_matches(matches_list, selected_index);
 		std::cout << user_input.c_str();
 		fflush(stdout);

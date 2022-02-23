@@ -18,6 +18,8 @@ TermHandler::TermHandler() {
 }
 
 void TermHandler::init() {
+	freopen("/dev/tty", "r", stdin);
+
 	std::wcout << std::unitbuf;
 
 	struct termios term;
