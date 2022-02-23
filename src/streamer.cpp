@@ -67,7 +67,7 @@ void match_it(std::string &selected_value, TermHandler *term) {
 	}
 
 	//clear_output();
-	printf("\n%s", matches_list[selected_index].c_str());
+	std::cout << std::endl << matches_list[selected_index];
 	selected_value = matches_list[selected_index];
 	term->reset();
 }

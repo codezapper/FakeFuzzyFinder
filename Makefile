@@ -9,7 +9,7 @@ exe:
 	$(CC) src/matcher.cpp -o obj/matcher.o
 	$(CC) src/fff.cpp -o obj/fff.o
 
-	g++ -o fff fff.o matcher.o term.o input.o streamer.o -lpthread
+	g++ -O3 -o fff obj/fff.o obj/matcher.o obj/term.o obj/input.o obj/streamer.o -lpthread
 
 clean:
 	rm -f obj/streamer.o obj/input.o obj/term.o obj/matcher.o obj/fff.o fff
