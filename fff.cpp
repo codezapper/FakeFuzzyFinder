@@ -1,7 +1,4 @@
-#include "generic.h"
-#include "term.h"
 #include "matcher.h"
-#include "input.h"
 #include "streamer.h"
 
 std::mutex update_mtx;
@@ -18,11 +15,12 @@ int main(int argc, char **argv) {
 	char c;
 
 	FILE *out_file = open_out_file(argc, argv);
+	TermHandler term = TermHandler();
 
 	std::string cmd = get_command();
 
 	if (cmd != "") {
-		std::string selected_value = stream_it(cmd);
+		std::string selected_value = stream_it(cmd, &term);
 		close_out_file(out_file, selected_value);
 		return 0;
 	}
@@ -33,7 +31,7 @@ int main(int argc, char **argv) {
 
 	freopen("/dev/tty", "r", stdin);
 
-	init_terminal_input();
+	term.init();
 	std::vector<std::string> matches_list;
 
 	int selected_index = 0;
@@ -44,16 +42,16 @@ int main(int argc, char **argv) {
 		std::cout << user_input.c_str();
 		fflush(stdout);
 
-		while (!kbhit()) {
+		while (!term.kbhit()) {
 		}
 
-		user_input = handle_input(user_input, items_list.size(), selected_index);
-		clear_output();
+		user_input = term.handle_input(user_input, items_list.size(), selected_index);
+		term.clear_output();
 	}
 
-	clear_output();
+	term.clear_output();
 	close_out_file(out_file, matches_list[selected_index]);
-	tcsetattr(0, TCSANOW, &original_term);
+	term.reset();
 
 	return 0;
 }

@@ -1,5 +1,4 @@
 #include "term.h"
-#include "input.h"
 #include "matcher.h"
 #include "streamer.h"
 
@@ -8,7 +7,7 @@ extern std::string shared_item;
 extern struct termios original_term;
 extern int match_done;
 
-void match_it(std::string &selected_value) {
+void match_it(std::string &selected_value, TermHandler *term) {
 	std::vector<std::string> items_list;
 	std::vector<std::string> matches_list;
 	std::vector<std::string> prev_matches_list;
@@ -22,13 +21,13 @@ void match_it(std::string &selected_value) {
 	char c;
 
 	freopen("/dev/tty", "r", stdin);
-	init_terminal_input();
+	term->init();
 
 	bool must_compute = true;
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 	while (!match_done) {
-		while (!kbhit()) {
+		while (!term->kbhit()) {
 			if (shared_item == "") {
 				continue;
 			}
@@ -58,7 +57,7 @@ void match_it(std::string &selected_value) {
 				prev_index = selected_index;
 				prev_user_input = user_input;
 				if (!first_show) {
-					clear_output();
+					term->clear_output();
 				}
 				show_matches(matches_list, selected_index);
 				first_show = false;
@@ -67,18 +66,18 @@ void match_it(std::string &selected_value) {
 			fflush(stdout);
 		}
 
-		user_input = handle_input(user_input, matches_list.size(), selected_index);
+		user_input = term->handle_input(user_input, matches_list.size(), selected_index);
 	}
 
 	//clear_output();
 	printf("\n%s", matches_list[selected_index].c_str());
 	selected_value = matches_list[selected_index];
-	tcsetattr(0, TCSANOW, &original_term);
+	term->reset();
 }
 
-std::string stream_it(std::string cmd) {
+std::string stream_it(std::string cmd, TermHandler *term) {
 	std::string selected_value;
-	std::thread match_thread(match_it, std::ref(selected_value));
+	std::thread match_thread(match_it, std::ref(selected_value), term);
 	std::string item;
 
 	while ((item = get_items_from_command(cmd.c_str())) != SENTINEL_STRING) {

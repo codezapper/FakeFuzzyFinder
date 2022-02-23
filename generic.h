@@ -1,5 +1,8 @@
 #pragma once
 
+#define DEFAULT_LINES 10
+#define SENTINEL_STRING "FFF_SENTINEL"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string>
@@ -25,5 +28,6 @@
 #include <climits>
 #include <chrono>
 
-#define  DEFAULT_LINES 10
-
+#include "input.h"
+#include "term.h"
+#include "matcher.h"

@@ -1,27 +1,37 @@
 #include "term.h"
 
-struct termios original_term;
 extern int match_done;
 
-void init_terminal_input() {
+TermHandler::TermHandler() {
+}
+
+void TermHandler::init() {
 	std::wcout << std::unitbuf;
 
 	struct termios term;
-	tcgetattr(0, &original_term);
+	tcgetattr(0, &this->_original_term);
 	tcgetattr(0, &term);
 	term.c_lflag &= ~ICANON;
 	term.c_lflag &= ~ECHO;
 	tcsetattr(0, TCSANOW, &term);
 	setbuf(stdin, NULL);
+	this->_initialized = true;
 }
 
-int kbhit() {
+void TermHandler::reset() {
+	if (this->_initialized) {
+		tcsetattr(0, TCSANOW, &this->_original_term);
+	}
+	this->_initialized = false;
+}
+
+int TermHandler::kbhit() {
 	static int nbbytes;
 	ioctl(0, FIONREAD, &nbbytes);
 	return nbbytes;
 }
 
-std::string handle_input(std::string user_input, int list_size, int &selected_index) {
+std::string TermHandler::handle_input(std::string user_input, int list_size, int &selected_index) {
 	char c = getchar();
 
 	if (is_extended(c)) {
@@ -48,15 +58,7 @@ std::string handle_input(std::string user_input, int list_size, int &selected_in
 	return user_input;
 }
 
-bool is_printable(char c) {
-	if ((c >= 0x20) && (c <= 0x7E)) {
-		return true;
-	}
-
-	return false;
-}
-
-void clear_output(int lines) {
+void TermHandler::clear_output(int lines) {
 	// Clear current cursor line (for input)
 	std::cout << "\33[2K";
 	for (int i = 0; i < lines; i++) {
@@ -64,6 +66,14 @@ void clear_output(int lines) {
 		std::cout << "\33[2K";
 		std::cout << "\r";
 	}
+}
+
+bool is_printable(char c) {
+	if ((c >= 0x20) && (c <= 0x7E)) {
+		return true;
+	}
+
+	return false;
 }
 
 bool is_extended(char c) {

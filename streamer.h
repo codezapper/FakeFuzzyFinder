@@ -1,5 +1,6 @@
 #include "generic.h"
 
-void match_it(std::string &selected_value);
-std::string stream_it(std::string cmd);
+#include "term.h"
 
+void match_it(std::string &selected_value, TermHandler *term);
+std::string stream_it(std::string cmd, TermHandler *term);
