@@ -1,7 +1,7 @@
 #include "streamer.h"
 
-extern std::mutex update_mtx;
-extern std::string shared_item;
+std::mutex update_mtx;
+std::string shared_item;
 extern int match_done;
 
 void match_it(std::string &selected_value, TermHandler *term) {

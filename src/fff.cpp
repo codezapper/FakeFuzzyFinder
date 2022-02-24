@@ -1,8 +1,5 @@
 #include "streamer.h"
 
-std::mutex update_mtx;
-std::string shared_item;
-
 int match_done = 0;
 
 
