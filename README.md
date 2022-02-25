@@ -2,7 +2,7 @@
 
 A (almost) fuzzy finder for the command line
 
-![Animated demo](http://github.com/codezapper/FakeFuzzyFinder/blob/main/fff.gif?raw=true)
+![Animated demo](http://github.com/codezapper/FakeFuzzyFinder/blob/main/fff.gif)
 
 This is a tool that will take a list of text lines and filter them by a (fake) fuzzy search.
 
