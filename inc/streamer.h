@@ -5,5 +5,17 @@
 #include "input.h"
 #include "matcher.h"
 
-void match_it(std::string &selected_value, TermHandler *term);
-std::string stream_it(std::string cmd, TermHandler *term);
+extern int match_done;
+
+class Streamer {
+    private:
+        std::string shared_item;
+        TermHandler *term;
+
+    public:
+        Streamer(TermHandler *term) {
+            this->term = term;
+        }
+        void match_it(std::string &selected_value);
+        std::string stream_it(std::string cmd);
+};
