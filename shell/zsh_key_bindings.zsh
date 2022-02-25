@@ -8,7 +8,7 @@ fff_file_widget() {
 
 fff_git_commands_widget() {
 	echo
-	git | grep "^   [a-z]"| sed 's/^   //g' | fff | tee /dev/tty | tail -1 | cut -d' ' -f1
+	output-`git | grep "^   [a-z]"| sed 's/^   //g' | fff | tee /dev/tty | tail -1 | cut -d' ' -f1`
 	zle reset-prompt
 	RBUFFER=$output
 	CURSOR=$#BUFFER
@@ -16,7 +16,7 @@ fff_git_commands_widget() {
 
 fff_branch_widget() {
 	echo
-	git --no-pager branch -a |cut -b 3-512 | fff | tee /dev/tty | tail -1 | tr -d ' '
+	output=`git --no-pager branch -a |cut -b 3-512 | fff | tee /dev/tty | tail -1 | tr -d ' '`
 	zle reset-prompt
 	RBUFFER=$output
 	CURSOR=$#BUFFER
@@ -34,7 +34,7 @@ fff_ps_widget() {
 
 fff_history_widget() {
 	echo
-	history | cut -b 8-60 | fff | tee /dev/tty | tail -1
+	output=`history | cut -b 8-60 | fff | tee /dev/tty | tail -1`
 	zle reset-prompt
 	RBUFFER=$output
 	CURSOR=$#BUFFER
@@ -42,7 +42,7 @@ fff_history_widget() {
 
 fff_pods_widget() {
 	echo
-	kubectl get pods | tail +2 | fff | tee /dev/tty | tail -1
+	output=`kubectl get pods | tail +2 | fff | tee /dev/tty | tail -1`
 	zle reset-prompt
 	RBUFFER=$output
 	CURSOR=$#BUFFER
@@ -50,7 +50,7 @@ fff_pods_widget() {
 
 fff_ssh_widget() {
 	echo
-	cat ~/.ssh/known_hosts | cut -d',' -f1 | cut -d' ' -f1 | fff | tee /dev/tty | tail -1 | cut -d' ' -f1
+	output=`cat ~/.ssh/known_hosts | cut -d',' -f1 | cut -d' ' -f1 | fff | tee /dev/tty | tail -1 | cut -d' ' -f1`
 	zle reset-prompt
 	RBUFFER=$output
 	CURSOR=$#BUFFER

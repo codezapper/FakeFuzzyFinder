@@ -1,10 +1,8 @@
 #include "streamer.h"
 
 std::mutex update_mtx;
-std::string shared_item;
-extern int match_done;
 
-void match_it(std::string &selected_value, TermHandler *term) {
+void Streamer::match_it(std::string &selected_value) {
 	std::vector<std::string> items_list;
 	std::vector<std::string> matches_list;
 	std::vector<std::string> prev_matches_list;
@@ -16,23 +14,27 @@ void match_it(std::string &selected_value, TermHandler *term) {
 	int selected_index = 0;
 	int prev_index = 0;
 
-	term->init();
+	this->term->init();
 
 	bool must_compute = true;
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 	Matcher matcher = Matcher();
 
+	// TODO: Using a signal would be better
+    // That would allow to have separate threads
+    // for updating the display, reading user input
+    // and (when streaming) updating the list of items
 	while (!match_done) {
-		while (!term->kbhit()) {
-			if (shared_item == "") {
+		while (!this->term->kbhit()) {
+			if (this->shared_item == "") {
 				continue;
 			}
-			if (shared_item != SENTINEL_STRING) {
+			if (this->shared_item != SENTINEL_STRING) {
 				update_mtx.lock();
-				items_list.push_back(shared_item);
+				items_list.push_back(this->shared_item);
 				update_mtx.unlock();
-				shared_item = SENTINEL_STRING;
+				this->shared_item = SENTINEL_STRING;
 				must_compute = true;
 			}
 
@@ -54,27 +56,27 @@ void match_it(std::string &selected_value, TermHandler *term) {
 				prev_index = selected_index;
 				prev_user_input = user_input;
 				if (!first_show) {
-					term->clear_output();
+					this->term->clear_output();
 				}
-				term->show_matches(matches_list, selected_index);
+				this->term->show_matches(matches_list, selected_index);
 				first_show = false;
 				std::cout << user_input;
 			}
 			fflush(stdout);
 		}
 
-		user_input = term->handle_input(user_input, matches_list.size(), selected_index);
+		user_input = this->term->handle_input(user_input, matches_list.size(), selected_index);
 	}
 
 	//clear_output();
 	std::cout << std::endl << matches_list[selected_index];
 	selected_value = matches_list[selected_index];
-	term->reset();
+	this->term->reset();
 }
 
-std::string stream_it(std::string cmd, TermHandler *term) {
+std::string Streamer::stream_it(std::string cmd) {
 	std::string selected_value;
-	std::thread match_thread(match_it, std::ref(selected_value), term);
+	std::thread match_thread(&Streamer::match_it, this, std::ref(selected_value));
 	std::string item;
 
 	while ((item = get_items_from_command(cmd.c_str())) != SENTINEL_STRING) {
@@ -84,10 +86,10 @@ std::string stream_it(std::string cmd, TermHandler *term) {
 		}
 
 		update_mtx.lock();
-		shared_item = item;
+		this->shared_item = item;
 		update_mtx.unlock();
 
-		while (shared_item != SENTINEL_STRING) {
+		while (this->shared_item != SENTINEL_STRING) {
 			if (match_done == 1) {
 				break;
 			}

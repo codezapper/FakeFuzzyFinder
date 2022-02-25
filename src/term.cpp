@@ -1,6 +1,6 @@
 #include "term.h"
 
-extern int match_done;
+int match_done;
 
 bool is_printable(char c) {
 	if ((c >= 0x20) && (c <= 0x7E)) {
