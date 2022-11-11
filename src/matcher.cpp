@@ -13,7 +13,7 @@ int Matcher::compute_score(std::string item, std::string user_input) {
 
 	for (int i = 0; i < user_input.size(); i++) {
 		found = false;
-		int start_j = i;
+		int start_j = j;
 		while (j < item.size()) {
 			char user_char = user_input[i];
 			char item_char = item[j];
