@@ -29,6 +29,18 @@ NOTE: These files need to be used with `source zsh_key_bindings.zsh` or `source 
 NOTE 2: Bash terminal output on older bash versions on OS X might have a visual glitch, but it will still work.
 
 
+## The vim plugin
+
+To install the vim plugin, simply copy all the contents the `fff_vim` directory to your `~/.vim/pack/vendor/start` directory.
+
+This will create a `Files` command that you can run in normal mode with `:Files`.
+
+By default there are no key bindings for this, but as an example, it can be set to `Ctrl+t` b
+y putting this line in your ~/.vimrc:
+
+`nnoremap <C-T> :Files<C-M>`
+
+
 ## Default key bindings
 
 ZSH Only:
