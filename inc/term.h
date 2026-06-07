@@ -2,6 +2,9 @@
 
 #include "generic.h"
 
+int get_terminal_width();
+std::string truncate_middle(const std::string &text, int max_width);
+
 class TermHandler {
 	private:
 		struct termios _original_term;
