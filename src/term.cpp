@@ -14,6 +14,32 @@ bool is_extended(char c) {
 	return (c == 0x1B);
 }
 
+int get_terminal_width() {
+	struct winsize ws;
+	if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0) && (ws.ws_col > 0)) {
+		return ws.ws_col;
+	}
+	return 80;
+}
+
+std::string truncate_middle(const std::string &text, int max_width) {
+	if (max_width <= 0) {
+		return std::string();
+	}
+	if ((int)text.size() <= max_width) {
+		return text;
+	}
+	if (max_width <= 3) {
+		return std::string(max_width, '.');
+	}
+
+	int keep = max_width - 3;
+	int left_len = keep / 2;
+	int right_len = keep - left_len;
+
+	return text.substr(0, left_len) + "..." + text.substr(text.size() - right_len);
+}
+
 TermHandler::TermHandler() {
 }
 
@@ -99,12 +125,14 @@ int TermHandler::go_up(int index, int lines) {
 }
 
 void TermHandler::show_matches(std::vector<std::string>matches_list, int selected_index, int lines) {
+	int width = get_terminal_width();
 	int index = 0;
 	for (auto it = std::begin(matches_list); it != std::end(matches_list); ++it) {
+		std::string line = truncate_middle(*it, width);
 		if (index == selected_index) {
-			std::cout << "\33[7m" << *it << "\033[0m" << std::endl;
+			std::cout << "\33[7m" << line << "\033[0m" << std::endl;
 		} else {
-			std::cout << *it << std::endl;
+			std::cout << line << std::endl;
 		}
 		index++;
 	}

@@ -30,6 +30,15 @@ obj/fff.o: src/fff.cpp
 fff: obj/fullreader.o obj/streamer.o obj/input.o obj/term.o obj/matcher.o obj/fff.o
 	$(LD) -O3 -o fff obj/fff.o obj/matcher.o obj/term.o obj/input.o obj/streamer.o obj/fullreader.o -lpthread
 
+obj/test_truncate: tests/test_truncate.cpp src/term.cpp inc/term.h
+	@mkdir -p obj
+	$(LD) -std=c++11 -I./inc -o obj/test_truncate tests/test_truncate.cpp src/term.cpp -lpthread
+
+test: obj/test_truncate
+	./obj/test_truncate
+
 clean:
-	rm -f obj/fullreader.o obj/streamer.o obj/input.o obj/term.o obj/matcher.o obj/fff.o fff
+	rm -f obj/fullreader.o obj/streamer.o obj/input.o obj/term.o obj/matcher.o obj/fff.o obj/test_truncate fff
+
+.PHONY: all test clean
 
