@@ -1,6 +1,7 @@
 #include "term.h"
 
 int match_done;
+static int cached_terminal_width = -1;
 
 bool is_printable(char c) {
 	if ((c >= 0x20) && (c <= 0x7E)) {
@@ -15,11 +16,21 @@ bool is_extended(char c) {
 }
 
 int get_terminal_width() {
+	if (cached_terminal_width != -1) {
+		return cached_terminal_width;
+	}
+	
 	struct winsize ws;
 	if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0) && (ws.ws_col > 0)) {
+		cached_terminal_width = ws.ws_col;
 		return ws.ws_col;
 	}
+	cached_terminal_width = 80;
 	return 80;
+}
+
+void reset_terminal_width_cache() {
+	cached_terminal_width = -1;
 }
 
 std::string truncate_middle(const std::string &text, int max_width) {
@@ -88,7 +99,9 @@ std::string TermHandler::handle_input(std::string user_input, int list_size, int
 			user_input += c;
 		} else {
 			if (0x7F == c) {
-				user_input.pop_back();
+				if (!user_input.empty()) {
+					user_input.pop_back();
+				}
 			} else if ((0x09 == c) || (0x0D == c) || (0x0A == c)) {
 				match_done = 1;
 			}
